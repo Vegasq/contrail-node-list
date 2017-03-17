@@ -24,7 +24,7 @@ func main() {
 	token := GetKeystoneToken(*keystone, *username, *password, *tenant)
 
 	capi := ContrailAPI{token, *contrail}
-	cnm := ContrailNodeManager(&capi)
+	cnm := ContrailNodeManager(capi)
 
 	for _, Type := range cnm.GetKnownTypes(){
 

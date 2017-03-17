@@ -132,7 +132,7 @@ type jsonVRouterStruct struct {
 
 
 type configBucket struct {
-	ContrailAPI *ContrailAPI
+	ContrailAPI ContrailAPIInterface
 	BucketPath string
 	Nodes []jsonConfigNode
 }
@@ -170,7 +170,7 @@ func (b *configBucket) getNodes() []contrailNode {
 
 
 type analyticsBucket struct {
-	ContrailAPI *ContrailAPI
+	ContrailAPI ContrailAPIInterface
 	BucketPath string
 	Nodes []jsonAnalyticsNode
 }
@@ -209,7 +209,7 @@ func (b *analyticsBucket) getNodes() []contrailNode {
 
 
 type databaseBucket struct {
-	ContrailAPI *ContrailAPI
+	ContrailAPI ContrailAPIInterface
 	BucketPath string
 	Nodes []jsonDatabaseNode
 }
@@ -248,7 +248,7 @@ func (b *databaseBucket) getNodes() []contrailNode {
 
 
 type vRouterBucket struct {
-	ContrailAPI *ContrailAPI
+	ContrailAPI ContrailAPIInterface
 	BucketPath string
 	Nodes []jsonVRouterNode
 }
@@ -286,7 +286,7 @@ func (b *vRouterBucket) getNodes() []contrailNode {
 }
 
 
-func ContrailNodeManager(capi *ContrailAPI) ContrailNodes {
+func ContrailNodeManager(capi ContrailAPIInterface) ContrailNodes {
 	cn := ContrailNodes{}
 
 	cb := configBucket{capi, "/config-nodes", nil}

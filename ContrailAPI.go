@@ -8,13 +8,17 @@ import (
 	"io/ioutil"
 )
 
+type ContrailAPIInterface interface {
+	ApiCall(string) []byte
+}
+
 type ContrailAPI struct {
 	Token string
 	ContrailAPI string
 }
 
 
-func (c *ContrailAPI) ApiCall(Path string) []byte {
+func (c ContrailAPI) ApiCall(Path string) []byte {
 	client := &http.Client{}
 
 	if strings.Contains(Path, c.ContrailAPI) {
@@ -35,5 +39,8 @@ func (c *ContrailAPI) ApiCall(Path string) []byte {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+
+	//fmt.Println("if  Path == `"+Path+"` { \n return []byte(`"+string(body)+"`) " + "\n}")
+
 	return body
 }
