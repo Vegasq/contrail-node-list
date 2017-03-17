@@ -84,7 +84,8 @@ func (c *Contrail) ApiCall(Path string) []byte {
 	req.Header.Add("X-Auth-Token", c.Token)
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("No responce from Contrail API.", c.ContrailAPI, Path)
+		fmt.Printf("No response from Contrail API.", c.ContrailAPI,
+			Path, err.Error())
 		os.Exit(1)
 	}
 	defer resp.Body.Close()

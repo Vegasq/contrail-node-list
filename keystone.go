@@ -1,51 +1,60 @@
 package main
 
 import (
-	"net/http"
-	"strings"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"encoding/json"
+	"net/http"
+	"strings"
+	"os"
+	"crypto/tls"
 )
 
-type KeystoneResponce struct {
+
+type keystoneResponse struct {
 	Access struct {
 		Token struct {
 			Id string
-		      }
-	       }
+		}
+	}
 }
 
 
-func GetKeystoneToken(
-	endpoint string,
-	username string, password string,
-	tenant string) string {
-
-	url := endpoint+"/v2.0/tokens"
+// GetKeystoneToken extract new token from KeystoneV2
+func GetKeystoneToken(endpoint string, username string, password string, tenant string) string {
+	url := endpoint + "/v2.0/tokens"
 	authBody := `{
 		"auth": {
 			"passwordCredentials": {
-				"username": "`+username+`",
-				"password": "`+password+`"
+				"username": "` + username + `",
+				"password": "` + password + `"
 			},
-			"tenantName": "`+tenant+`"
+			"tenantName": "` + tenant + `"
 		}
 	}`
 
-	res, err := http.Post(url, "application/json; charset=utf-8",
+	// For https we will drop cert verification
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+    	}
+	client := &http.Client{Transport: tr}
+
+	res, err := client.Post(
+		url,
+		"application/json; charset=utf-8",
 		strings.NewReader(authBody))
+
 	if err != nil {
 		fmt.Println("Can't get responce from Keystone.")
-		fmt.Errorf(err.Error())
+		os.Exit(1)
 	}
-
 	body2, _ := ioutil.ReadAll(res.Body)
 
-	kr := KeystoneResponce{}
+	kr := keystoneResponse{}
 	err = json.Unmarshal(body2, &kr)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
 	return kr.Access.Token.Id
 }
