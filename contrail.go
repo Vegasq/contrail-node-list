@@ -6,6 +6,8 @@ import (
 	"os"
 	"io/ioutil"
 	"encoding/json"
+	"github.com/vegasq/GoPrintTable"
+
 )
 
 type IGenericNodes interface {
@@ -118,12 +120,14 @@ func (c *Contrail) DisplayNodes() {
 		buildTable := [][]string{}
 		fmt.Println("\n", node.GetType())
 
+		buildTable = append(buildTable, []string{"Domain", "UUID"})
+
 		exactNodes := node.NodesList()
 		for _, enode := range exactNodes {
 			buildTable = append(buildTable,
 				[]string{enode.FqName[1], enode.Uuid})
 		}
-		PrintTable(buildTable)
+		GoPrintTable.PrintTableWithHeader(buildTable)
 	}
 
 }
